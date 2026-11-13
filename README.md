@@ -28,7 +28,7 @@ The app can also download ZIP code centroids from the U.S. Census, which is what
 
 ## Sharing with JS8Map
 
-`ham.db` is the same database used by [JS8MapChat](https://github.com/mjordan501/JS8MapChat). If you run both, they can share one copy rather than each building their own.
+`ham.db` is the same database used by [JS8MapChat](https://github.com/HamRadioMadeSimple/JS8MapChat). If you run both, they can share one copy rather than each building their own.
 
 ## Installing
 
