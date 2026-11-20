@@ -1,0 +1,162 @@
+# Making a tag like v1.65 (on the Releases page) builds the Windows Setup.exe and portable zip and the
+# Linux .tar.gz, tests the Linux download on clean Ubuntu, Debian and Fedora, then attaches the files to
+# that release. (Actions > Release > Run workflow also builds and tests them, without a release.)
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install Inno Setup (for the installer)
+        run: choco install innosetup -y --no-progress
+      - name: Build the Setup.exe
+        shell: cmd
+        working-directory: windows
+        run: Build_FCC_Lookup_Ver_1.65.bat
+      - name: Make the portable zip
+        shell: pwsh
+        run: |
+          $v = (Select-String -Path windows/FCC_Lookup_Ver_1.65.pyw -Pattern '^APP_VERSION = "Ver ([0-9.]+)"').Matches[0].Groups[1].Value
+          $name = "FCC-Lookup-$v-Windows-Portable"
+          New-Item -ItemType Directory -Force -Path "stage/$name", output | Out-Null
+          Copy-Item -Recurse "windows/dist/FCC_Lookup_Ver_$v/*" "stage/$name/"
+          Copy-Item docs/*.pdf "stage/$name/" -ErrorAction SilentlyContinue
+          Copy-Item LICENSE "stage/$name/LICENSE.txt"
+          Copy-Item "windows/installer_output/FCC_Lookup_Ver_${v}_Setup.exe" output/
+          Compress-Archive -Path "stage/$name" -DestinationPath "output/$name.zip"
+          Get-ChildItem output
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows
+          path: |
+            output/FCC_Lookup_Ver_*_Setup.exe
+            output/FCC-Lookup-*-Windows-Portable.zip
+
+  linux:
+    # Built on Ubuntu 22.04, so it runs on Mint 21 / Ubuntu 22.04 and newer. The program carries its own
+    # Python and Tk: people don't install anything.
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Tk for Python (only for building)
+        run: sudo apt-get update && sudo apt-get install -y python3-tk python3-venv
+      - name: Build the .tar.gz
+        run: bash linux/build_linux.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux
+          path: output/FCC-Lookup-*-Linux.tar.gz
+
+  linux-test:
+    # Install the download with the guide's three lines on clean systems that have no Python or Tk,
+    # then check the program opens. Xvfb (a virtual screen) is the only thing added, for the test.
+    needs: linux
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        image: ["ubuntu:22.04", "debian:12", "fedora:latest"]
+    container: ${{ matrix.image }}
+    steps:
+      - name: Virtual screen (test only)
+        run: |
+          if command -v apt-get >/dev/null; then
+            apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y xvfb
+          else
+            dnf install -y xorg-x11-server-Xvfb tar gzip findutils
+          fi
+          if command -v python3 >/dev/null && python3 -c "import tkinter" 2>/dev/null; then
+            echo "This system already has Python with Tk - the test would prove nothing"; exit 1
+          fi
+      - uses: actions/download-artifact@v4
+        with:
+          name: linux
+          path: dl
+      - name: Install with the guide's three lines
+        shell: bash
+        run: |
+          mkdir -p ~/Downloads && cp dl/*.tar.gz ~/Downloads/
+          printf 'n\n' | bash -c '
+          F="$(ls -t ~/Downloads/FCC-Lookup-*-Linux*.tar.gz | head -n 1)"
+          tar -xzf "$F" -C ~/Downloads
+          bash ~/Downloads/"$(tar -tzf "$F" | head -n 1 | cut -d/ -f1)"/update_linux.sh'
+          test -x ~/.local/bin/fcc-lookup
+          test -f ~/.local/share/applications/fcc-lookup.desktop
+      - name: The program opens
+        shell: bash
+        run: |
+          Xvfb :99 -screen 0 1100x750x24 & sleep 2
+          DISPLAY=:99 ~/.local/bin/fcc-lookup & P=$!
+          sleep 8
+          kill -0 $P
+          kill $P || true
+          test ! -f ~/.config/FCC_Lookup/error_log.txt
+      - name: The uninstaller keeps the database
+        shell: bash
+        run: |
+          touch ~/FCC_DB/ham.db
+          printf '\n' | bash ~/Applications/FCC-Lookup/linux_uninstall.sh
+          test ! -e ~/Applications/FCC-Lookup
+          test -f ~/FCC_DB/ham.db
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [windows, linux, linux-test]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: out
+      - name: Check the tag matches the version in the program
+        run: |
+          V="${GITHUB_REF_NAME#v}"
+          grep -q "^APP_VERSION = \"Ver $V\"" windows/FCC_Lookup_Ver_1.65.pyw || { echo "Tag $GITHUB_REF_NAME but the program says otherwise"; exit 1; }
+      - name: Release notes from CHANGELOG.md (the section for this version)
+        run: |
+          V="${GITHUB_REF_NAME#v}"
+          R="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY"
+          awk -v v="$V" '/^## /{if (f) exit; f=($2==v)} f' CHANGELOG.md | tail -n +2 > body.md
+          {
+            echo "## Downloads"
+            echo ""
+            echo "| System | File | How to install |"
+            echo "|---|---|---|"
+            echo "| Windows 10/11 | \`FCC_Lookup_Ver_${V}_Setup.exe\` | Run it. See the [Windows Installation Guide]($R/blob/main/docs/FCC_Lookup_Windows_Install_Guide.pdf). |"
+            echo "| Windows (no install) | \`FCC-Lookup-$V-Windows-Portable.zip\` | Unzip and run \`FCC_Lookup_Ver_${V}.exe\`. |"
+            echo "| Linux | \`FCC-Lookup-$V-Linux.tar.gz\` | Save it in Downloads and follow [Installing FCC Lookup on Linux]($R/blob/main/docs/FCC_Lookup_Linux_Install_Guide.pdf) (three pasted lines). Nothing else to install. |"
+            echo ""
+            echo "If Windows says \"Windows protected your PC\", click **More info > Run anyway**. The program isn't code-signed."
+            echo ""
+            echo "How to use it: [User Guide]($R/blob/main/docs/FCC_Lookup_User_Guide.pdf) (also inside every download)."
+            echo ""
+            echo "## What's new"
+            echo ""
+            cat body.md
+            echo ""
+            echo "---"
+            echo "Problems or ideas: please open an [issue]($R/issues). Full history: [CHANGELOG.md]($R/blob/main/CHANGELOG.md)."
+          } > notes.md
+          cat notes.md
+      - name: Publish the release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: FCC Lookup ${{ github.ref_name }}
+          body_path: notes.md
+          make_latest: true
+          files: |
+            out/windows/FCC_Lookup_Ver_*_Setup.exe
+            out/windows/FCC-Lookup-*-Windows-Portable.zip
+            out/linux/FCC-Lookup-*-Linux.tar.gz

@@ -1,11 +1,14 @@
 ; FCC Lookup Ver 1.65 - Inno Setup Installer Script
-; Fast-launch test: installs PyInstaller onedir folder.
+; Installs the PyInstaller onedir folder (fast start). GitHub builds it: see .github/workflows/release.yml.
 
 [Setup]
 AppName=FCC Lookup
 AppVersion=1.65
 AppVerName=FCC Lookup Ver 1.65
-AppPublisher=FCC Lookup
+AppPublisher=Ham Radio Made Simple (KW3KW)
+AppPublisherURL=https://hamradiomadesimple.github.io/
+AppSupportURL=https://github.com/HamRadioMadeSimple/FCC_Lookup/issues
+AppUpdatesURL=https://github.com/HamRadioMadeSimple/FCC_Lookup/releases/latest
 DefaultDirName={autopf}\FCC_Lookup
 DefaultGroupName=FCC Lookup
 AllowNoIcons=yes
@@ -33,6 +36,8 @@ Name: "startmenuicon"; Description: "Create a &Start Menu shortcut"; \
 Source: "dist\FCC_Lookup_Ver_1.65\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "FC_launcher_icon.ico"; DestDir: "{app}"; Flags: ignoreversion
 Source: "fcc_icon.png"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\docs\FCC_Lookup_User_Guide.pdf"; DestDir: "{app}"; Flags: ignoreversion skipifsourcedoesntexist
+Source: "..\docs\FCC_Lookup_Windows_Install_Guide.pdf"; DestDir: "{app}"; Flags: ignoreversion skipifsourcedoesntexist
 
 [Dirs]
 ; Create C:\FCC_DB automatically so the app can write to it on first launch.
@@ -47,6 +52,9 @@ Name: "{autodesktop}\FCC Lookup"; \
     Filename: "{app}\FCC_Lookup_Ver_1.65.exe"; \
     IconFilename: "{app}\FC_launcher_icon.ico"; \
     Tasks: desktopicon
+Name: "{group}\FCC Lookup User Guide"; \
+    Filename: "{app}\FCC_Lookup_User_Guide.pdf"; \
+    Tasks: startmenuicon
 Name: "{group}\Uninstall FCC Lookup"; \
     Filename: "{uninstallexe}"; \
     Tasks: startmenuicon
@@ -58,6 +66,6 @@ Filename: "{app}\FCC_Lookup_Ver_1.65.exe"; \
 
 [Messages]
 WelcomeLabel1=Welcome to FCC Lookup Ver 1.65 Setup
-WelcomeLabel2=This will install FCC Lookup Ver 1.65 on your computer.%n%nFCC Lookup is an offline ham radio callsign lookup tool covering USA and Canada.%n%nThis fast-launch test version uses an installed app folder instead of a self-extracting one-file EXE.%n%nClick Next to continue.
+WelcomeLabel2=This will install FCC Lookup Ver 1.65 on your computer.%n%nFCC Lookup is an offline ham radio callsign lookup tool covering USA and Canada.%n%nClick Next to continue.
 FinishedHeadingLabel=FCC Lookup Ver 1.65 Installation Complete
 FinishedLabel=FCC Lookup Ver 1.65 has been installed successfully!%n%nOn first launch:%n%n  1. Click [Update FCC DB] to download US license data%n  2. Click [Update Canadian DB] to download Canadian data%n  3. Use Database > Download / Update ZIP Centers for zip-to-zip distance/bearing%n  4. Use [Browse Records] to inspect ham.db%n%nBoth downloads require an internet connection and take a few minutes.

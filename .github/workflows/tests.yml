@@ -1,0 +1,47 @@
+# Runs the code checks and a start-up test on every push and pull request.
+name: Tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  linux:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Tk for Python and a virtual screen
+        run: sudo apt-get update && sudo apt-get install -y python3-tk xvfb
+      - name: Code checks (pyflakes; the three known harmless notes are skipped)
+        run: |
+          python3 -m pip install --user pyflakes
+          python3 -m pyflakes windows/FCC_Lookup_Ver_1.65.pyw linux/FCC_Lookup_Ver_1.65_linux.py \
+            | grep -vE "assigned to but never used|f-string is missing placeholders" > flakes.txt || true
+          cat flakes.txt
+          test ! -s flakes.txt
+      - name: Shell scripts parse
+        run: for f in linux/*.sh; do bash -n "$f"; done
+      - name: Windows and Linux programs have the same version
+        run: |
+          W="$(grep -m1 '^APP_VERSION' windows/FCC_Lookup_Ver_1.65.pyw)"
+          L="$(grep -m1 '^APP_VERSION' linux/FCC_Lookup_Ver_1.65_linux.py)"
+          echo "$W / $L"
+          [ "${L/ Linux/}" = "$W" ]
+      - name: The Linux program starts (from source)
+        run: |
+          export HOME="$(mktemp -d)"
+          xvfb-run -a python3 linux/FCC_Lookup_Ver_1.65_linux.py & P=$!
+          sleep 8
+          kill -0 $P   # still running = the window opened without an error
+          kill $P || true
+          test ! -f "$HOME/.config/FCC_Lookup/error_log.txt"
+
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: The Windows program compiles
+        run: python -m py_compile windows/FCC_Lookup_Ver_1.65.pyw

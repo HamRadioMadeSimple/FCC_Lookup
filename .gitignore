@@ -1,0 +1,26 @@
+__pycache__/
+*.pyc
+build/
+dist/
+output/
+installer_output/
+windows/build/
+windows/dist/
+.fcc_lookup_build_venv/
+AppDir/
+*.AppImage
+*.tar.gz
+.vscode/
+.idea/
+
+# user data - never in the public repo
+ham.db
+*.dat
+amateur_delim.txt
+zip_latlon.csv
+fcc_lookup.cfg
+fcc_lookup_settings.json
+error_log.txt
+
+# Word guides are the owner's masters; only the PDFs are published
+*.docx

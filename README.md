@@ -2,7 +2,7 @@
 
 An offline callsign lookup for U.S. FCC and Canadian amateur radio licenses. No internet connection needed once the database is built.
 
-**Version 1.65 — Windows and Linux**
+**Windows and Linux** · [Download](https://github.com/HamRadioMadeSimple/FCC_Lookup/releases/latest) · [Guides](docs) · [Website](https://hamradiomadesimple.github.io/)
 
 ## What it does
 
@@ -30,28 +30,41 @@ The app can also download ZIP code centroids from the U.S. Census, which is what
 
 `ham.db` is the same database used by [JS8MapChat](https://github.com/HamRadioMadeSimple/JS8MapChat). If you run both, they can share one copy rather than each building their own.
 
-## Installing
+## Download and install
 
-### Windows
+**[Download FCC Lookup](https://github.com/HamRadioMadeSimple/FCC_Lookup/releases/latest)** (Releases page, free).
 
-Installers are on the [Releases](../../releases) page.
+| System | File | How |
+|---|---|---|
+| Windows 10/11 | `FCC_Lookup_Ver_1.65_Setup.exe` | Run it. [Windows Installation Guide (PDF)](docs/FCC_Lookup_Windows_Install_Guide.pdf) |
+| Windows, no install | `FCC-Lookup-1.65-Windows-Portable.zip` | Unzip and run `FCC_Lookup_Ver_1.65.exe` |
+| Linux | `FCC-Lookup-1.65-Linux.tar.gz` | Three pasted lines, below. [Installing FCC Lookup on Linux (PDF)](docs/FCC_Lookup_Linux_Install_Guide.pdf) |
 
-To build from source instead, run `Build_FCC_Lookup_Ver_1.65.bat` in the `windows` folder. It uses PyInstaller, with Inno Setup for the installer.
+How to use it: **[User Guide (PDF)](docs/FCC_Lookup_User_Guide.pdf)**.
 
 ### Linux
 
-Put the contents of the `linux` folder together in one directory, then:
+The Linux download carries its own Python and window toolkit, so **nothing else needs installing**: no
+password, no extra packages. It runs on Linux Mint 21 and newer, Ubuntu 22.04 and newer, Debian 12, Fedora and
+other current desktop Linux (64-bit PC).
 
-    chmod +x run_fcc_lookup_Ver_1.65_linux.sh
-    ./run_fcc_lookup_Ver_1.65_linux.sh
+Save the `.tar.gz` in your Downloads folder, open a terminal (Ctrl+Alt+T), paste these three lines and press Enter:
 
-That runs it directly for a quick test. To install properly, use `setup_fcc_lookup_Ver_1.65_linux_mint.sh`. An AppImage build script is included as well.
+```bash
+F="$(ls -t ~/Downloads/FCC-Lookup-*-Linux*.tar.gz | head -n 1)"
+tar -xzf "$F" -C ~/Downloads
+bash ~/Downloads/"$(tar -tzf "$F" | head -n 1 | cut -d/ -f1)"/update_linux.sh
+```
 
-Written and tested on Linux Mint. Other distributions should work but have not been checked.
+It installs into `~/Applications/FCC-Lookup`, with an **FCC Lookup** icon in the menu and on the desktop. Paste
+the same lines again to update; your database and settings are kept. To remove it:
+`bash ~/Applications/FCC-Lookup/linux_uninstall.sh`.
 
-## Requirements
+### From source
 
-Python with Tkinter and SQLite, both standard. The Windows builds bundle everything, so nothing needs installing separately.
+The program is one Python file with no extra packages: `windows/FCC_Lookup_Ver_1.65.pyw` or
+`linux/FCC_Lookup_Ver_1.65_linux.py` (needs Python 3 with Tk). Building the downloads is described in
+[CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Data sources
 
@@ -61,7 +74,7 @@ Python with Tkinter and SQLite, both standard. The Windows builds bundle everyth
 
 **ZIP code centroids** — U.S. Census Bureau, public domain.
 
-All of it is downloaded from the official sources by the app itself. None of it is redistributed here.
+All of it is downloaded from the official sources by the app itself. None of it is redistributed here. Credits for the parts bundled in the downloads are in [NOTICE.md](NOTICE.md).
 
 ## License
 
@@ -75,4 +88,10 @@ The full license text is in [LICENSE](LICENSE).
 
 ## Reporting problems
 
-Open an issue on the [Issues](../../issues) tab. Please include: Windows or Linux, and what you expected to happen.
+Open an issue on the [Issues](https://github.com/HamRadioMadeSimple/FCC_Lookup/issues) page. Please include: Windows or Linux, the version (Help > About), and what you expected to happen. More in [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## More free ham radio apps by KW3KW
+
+[RigPanel](https://github.com/HamRadioMadeSimple/RigPanel) · [Flrig EMCOMM](https://github.com/HamRadioMadeSimple/Flrig-EMCOMM) · [JS8Map Spotter](https://github.com/HamRadioMadeSimple/JS8MapSpotter) · [JS8MapChat](https://github.com/HamRadioMadeSimple/JS8MapChat) · [DigiApp Launcher](https://github.com/HamRadioMadeSimple/DigiApp-Launcher) · all on the [website](https://hamradiomadesimple.github.io/) and the [YouTube channel](https://www.youtube.com/@hamradiomadesimple).
+
+73 de KW3KW
