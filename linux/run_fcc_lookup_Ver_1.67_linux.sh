@@ -11,4 +11,4 @@ then
     exit 1
 fi
 
-exec python3 "$SCRIPT_DIR/FCC_Lookup_Ver_1.65_linux.py"
+exec python3 "$SCRIPT_DIR/FCC_Lookup_Ver_1.67_linux.py"

@@ -1,9 +1,9 @@
 # -*- mode: python ; coding: utf-8 -*-
-# FCC Lookup Ver 1.65 - PyInstaller Spec File
+# FCC Lookup Ver 1.67 - PyInstaller Spec File
 # Fast-launch test: onedir build, no Pillow dependency.
 
 a = Analysis(
-    ['FCC_Lookup_Ver_1.65.pyw'],
+    ['FCC_Lookup_Ver_1.67.pyw'],
     pathex=[],
     binaries=[],
     datas=[
@@ -37,7 +37,7 @@ exe = EXE(
     a.scripts,
     [],
     exclude_binaries=True,
-    name='FCC_Lookup_Ver_1.65',
+    name='FCC_Lookup_Ver_1.67',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
@@ -57,5 +57,5 @@ coll = COLLECT(
     strip=False,
     upx=True,
     upx_exclude=[],
-    name='FCC_Lookup_Ver_1.65',
+    name='FCC_Lookup_Ver_1.67',
 )

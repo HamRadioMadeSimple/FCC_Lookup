@@ -14,8 +14,8 @@ Open an issue on the [Issues page](https://github.com/HamRadioMadeSimple/FCC_Loo
 
 | Folder | What |
 |---|---|
-| `windows/` | `FCC_Lookup_Ver_1.65.pyw` (the program), PyInstaller `.spec`, Inno Setup `.iss`, `Build_FCC_Lookup_Ver_1.65.bat` |
-| `linux/` | `FCC_Lookup_Ver_1.65_linux.py` (the program), `build_linux.sh`, `update_linux.sh` (install / update), `linux_uninstall.sh` |
+| `windows/` | `FCC_Lookup_Ver_1.67.pyw` (the program), PyInstaller `.spec`, Inno Setup `.iss`, `Build_FCC_Lookup_Ver_1.67.bat` |
+| `linux/` | `FCC_Lookup_Ver_1.67_linux.py` (the program), `build_linux.sh`, `update_linux.sh` (install / update), `linux_uninstall.sh` |
 | `docs/` | The guides (PDF) |
 
 The Windows and Linux programs are the same code apart from the default database folder (`C:\FCC_DB` or
@@ -26,15 +26,15 @@ The Windows and Linux programs are the same code apart from the default database
 Python 3 with Tk (Linux: `sudo apt install python3-tk`). Nothing else is needed.
 
 ```
-python3 linux/FCC_Lookup_Ver_1.65_linux.py      # Linux, or: bash linux/run_fcc_lookup_Ver_1.65_linux.sh
-python windows\FCC_Lookup_Ver_1.65.pyw          # Windows, or Run_FCC_Lookup_Ver_1.65_Debug.bat
+python3 linux/FCC_Lookup_Ver_1.67_linux.py      # Linux, or: bash linux/run_fcc_lookup_Ver_1.67_linux.sh
+python windows\FCC_Lookup_Ver_1.67.pyw          # Windows, or Run_FCC_Lookup_Ver_1.67_Debug.bat
 ```
 
 ## Building the downloads
 
 - **Linux:** `bash linux/build_linux.sh` makes `output/FCC-Lookup-<version>-Linux.tar.gz`. Build on the oldest
   Linux you want to support: the release is built on Ubuntu 22.04 so it runs on Mint 21 and newer.
-- **Windows:** run `windows\Build_FCC_Lookup_Ver_1.65.bat` (needs Python 3 and Inno Setup 6).
+- **Windows:** run `windows\Build_FCC_Lookup_Ver_1.67.bat` (needs Python 3 and Inno Setup 6).
 
 Keep `.sh` and `.py` files with LF line endings and `.bat` / `.iss` files with CRLF (`.gitattributes` does this).
 

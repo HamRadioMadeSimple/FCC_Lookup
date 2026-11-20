@@ -36,9 +36,9 @@ The app can also download ZIP code centroids from the U.S. Census, which is what
 
 | System | File | How |
 |---|---|---|
-| Windows 10/11 | `FCC_Lookup_Ver_1.65_Setup.exe` | Run it. [Windows Installation Guide (PDF)](docs/FCC_Lookup_Windows_Install_Guide.pdf) |
-| Windows, no install | `FCC-Lookup-1.65-Windows-Portable.zip` | Unzip and run `FCC_Lookup_Ver_1.65.exe` |
-| Linux | `FCC-Lookup-1.65-Linux.tar.gz` | Three pasted lines, below. [Installing FCC Lookup on Linux (PDF)](docs/FCC_Lookup_Linux_Install_Guide.pdf) |
+| Windows 10/11 | `FCC_Lookup_Ver_1.67_Setup.exe` | Run it. [Windows Installation Guide (PDF)](docs/FCC_Lookup_Windows_Install_Guide.pdf) |
+| Windows, no install | `FCC-Lookup-1.67-Windows-Portable.zip` | Unzip and run `FCC_Lookup_Ver_1.67.exe` |
+| Linux | `FCC-Lookup-1.67-Linux.tar.gz` | Three pasted lines, below. [Installing FCC Lookup on Linux (PDF)](docs/FCC_Lookup_Linux_Install_Guide.pdf) |
 
 How to use it: **[User Guide (PDF)](docs/FCC_Lookup_User_Guide.pdf)**.
 
@@ -62,8 +62,8 @@ the same lines again to update; your database and settings are kept. To remove i
 
 ### From source
 
-The program is one Python file with no extra packages: `windows/FCC_Lookup_Ver_1.65.pyw` or
-`linux/FCC_Lookup_Ver_1.65_linux.py` (needs Python 3 with Tk). Building the downloads is described in
+The program is one Python file with no extra packages: `windows/FCC_Lookup_Ver_1.67.pyw` or
+`linux/FCC_Lookup_Ver_1.67_linux.py` (needs Python 3 with Tk). Building the downloads is described in
 [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Data sources

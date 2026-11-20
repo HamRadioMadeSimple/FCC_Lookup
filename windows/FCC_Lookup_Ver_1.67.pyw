@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-FCC Lookup Ver 1.65 Linux - Ham Radio Callsign Lookup Tool
-Shares ham.db with JS8Map. Default folder on Linux: ~/FCC_DB
-Linux Mint build with distance and bearing from a home callsign.
+FCC Lookup Ver 1.67 - Ham Radio Callsign Lookup Tool
+Shares ham.db with JS8Map. Default folder on Windows: C:/FCC_DB
+Windows build with distance and bearing from a home callsign.
 """
 
 import tkinter as tk
@@ -10,11 +10,11 @@ from tkinter import ttk, messagebox, filedialog
 import sqlite3, csv, os, sys, threading, math, json, tempfile, urllib.request, zipfile
 
 APP_NAME = "FCC Lookup"
-APP_VERSION = "Ver 1.65 Linux"
+APP_VERSION = "Ver 1.67"
 APP_DISPLAY_NAME = f"{APP_NAME} {APP_VERSION}"
 AUTHOR_CALL = "KW3KW"
 AUTHOR_CREDIT = f"by {AUTHOR_CALL}"
-DEFAULT_DB_DIR = os.path.join(os.path.expanduser('~'), 'FCC_DB')
+DEFAULT_DB_DIR = r"C:\FCC_DB"
 
 # ── PyInstaller-safe paths ────────────────────────────────────────────────────
 # Bundled assets live in sys._MEIPASS when frozen. User-writable config/logs
@@ -102,7 +102,7 @@ def load_settings():
 
 def save_settings(settings):
     """Write settings to disk. Returns True on success, False if it could not
-    be written (read-only folder, bad permissions, etc.) so the caller can say so."""
+    be written (read-only folder, missing APPDATA, etc.) so the caller can say so."""
     try:
         os.makedirs(_state_dir(), exist_ok=True)
         with open(SETTINGS_FILE, "w", encoding="utf-8") as f:
@@ -908,8 +908,8 @@ class FccLookup(tk.Tk):
         for label in ('Name','City','Class','Distance','Direction'):
             r = tk.Frame(card, bg=CARD)
             r.pack(fill='x', pady=5)
-            # Use a fixed label column plus padding so longer labels like
-            # Distance/Direction do not crowd the returned value text.
+            # Fixed-width label column plus padding keeps Distance/Direction
+            # aligned with Name/City instead of crowding the returned value.
             tk.Label(r, text=f"{label}:", font=('Arial',12,'bold'), bg=CARD,
                      fg='#c8d0e0', width=10, anchor='w').pack(side='left', padx=(0,8))
             v = tk.Label(r, text="", font=('Arial',13,'bold'), bg=CARD,

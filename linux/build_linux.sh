@@ -14,8 +14,8 @@ HERE="$(cd "$(dirname "$0")" && pwd)"
 ROOT="$(dirname "$HERE")"
 cd "$HERE"
 
-VERSION="$(sed -n 's/^APP_VERSION = "Ver \([0-9.]*\).*/\1/p' FCC_Lookup_Ver_1.65_linux.py)"
-[ -n "$VERSION" ] || { echo "Could not read APP_VERSION from FCC_Lookup_Ver_1.65_linux.py"; exit 1; }
+VERSION="$(sed -n 's/^APP_VERSION = "Ver \([0-9.]*\).*/\1/p' FCC_Lookup_Ver_1.67_linux.py)"
+[ -n "$VERSION" ] || { echo "Could not read APP_VERSION from FCC_Lookup_Ver_1.67_linux.py"; exit 1; }
 NAME="FCC-Lookup-${VERSION}-Linux"
 BUILD="$ROOT/build/linux"
 STAGE="$BUILD/$NAME"
