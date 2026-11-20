@@ -127,8 +127,8 @@ def set_base_dir(path):
     save_config(path)
 
 US_CLASSES = {
-    'T':'Technician','G':'General','A':'Amateur Extra',
-    'N':'Novice','P':'Advanced (Legacy)',
+    'T':'Technician','G':'General','E':'Amateur Extra',
+    'A':'Advanced','N':'Novice','P':'Technician Plus',
 }
 
 PROVINCE = {

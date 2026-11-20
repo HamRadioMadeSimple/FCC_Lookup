@@ -5,6 +5,8 @@
   asks "Download the U.S. (FCC) and Canadian amateur databases now?". Yes downloads both, one after the other
   (several minutes). If a database is already there, for example from JS8Map or an earlier install, it is used
   straight away and nothing is asked.
+- **Fixed: license class names.** The result card showed just "E" for Amateur Extra licenses, and some other
+  classes had the wrong name. It now reads Technician, General, Amateur Extra, Advanced, Novice or Technician Plus.
 
 ## 1.67 - 2026-11-20 - first release built by GitHub
 FCC Lookup answers one question quickly: who holds this callsign, and where are they from you? It looks up U.S. (FCC)
