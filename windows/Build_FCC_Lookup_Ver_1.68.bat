@@ -2,13 +2,13 @@
 setlocal
 :: On GitHub (CI is set) never wait for a key press.
 if defined CI (set "PAUSE_CMD=rem") else (set "PAUSE_CMD=pause")
-title FCC Lookup Ver 1.67 - Fast Launch Build Installer
+title FCC Lookup Ver 1.68 - Fast Launch Build Installer
 color 1F
 cls
 
 echo.
 echo  ============================================
-echo   FCC Lookup Ver 1.67  --  Fast Launch Build
+echo   FCC Lookup Ver 1.68  --  Fast Launch Build
 echo  ============================================
 echo.
 
@@ -22,7 +22,7 @@ if errorlevel 1 (
 
 :: ── Check all required files are present ──────────────────────────────────────
 echo  Checking required files...
-for %%F in (FCC_Lookup_Ver_1.67.pyw FCC_Lookup_Ver_1.67.spec FC_launcher_icon.ico fcc_icon.png) do (
+for %%F in (FCC_Lookup_Ver_1.68.pyw FCC_Lookup_Ver_1.68.spec FC_launcher_icon.ico fcc_icon.png) do (
     if not exist "%%F" (
         echo  [ERROR] Missing file: %%F
         echo  All files must be in the same folder as this batch file.
@@ -44,7 +44,7 @@ echo.
 
 :: ── Build onedir app with PyInstaller ────────────────────────────────────────
 echo  Step 2 of 3:  Building fast-launch onedir app ^(this takes 1-2 minutes^)...
-pyinstaller FCC_Lookup_Ver_1.67.spec --clean --noconfirm
+pyinstaller FCC_Lookup_Ver_1.68.spec --clean --noconfirm
 if errorlevel 1 (
     echo  [ERROR] PyInstaller build failed. See output above.
     %PAUSE_CMD% & exit /b 1
@@ -62,16 +62,16 @@ if exist "C:\Program Files\Inno Setup 6\ISCC.exe"       set "ISCC=C:\Program Fil
 if "%ISCC%"=="" (
     echo  [NOTICE] Inno Setup not found.
     echo  Download free from: https://jrsoftware.org/isdl.php
-    echo  Then run:  ISCC.exe FCC_Lookup_Ver_1.67.iss
+    echo  Then run:  ISCC.exe FCC_Lookup_Ver_1.68.iss
     echo.
     echo  Your fast-launch app folder is ready at:
-    echo    dist\FCC_Lookup_Ver_1.67
+    echo    dist\FCC_Lookup_Ver_1.68
     echo.
     %PAUSE_CMD% & exit /b 0
 )
 
 mkdir installer_output 2>nul
-"%ISCC%" FCC_Lookup_Ver_1.67.iss
+"%ISCC%" FCC_Lookup_Ver_1.68.iss
 if errorlevel 1 (
     echo  [ERROR] Inno Setup compilation failed.
     %PAUSE_CMD% & exit /b 1
@@ -82,7 +82,7 @@ echo  ============================================
 echo   BUILD COMPLETE!
 echo.
 echo   Installer ready at:
-echo   installer_output\FCC_Lookup_Ver_1.67_Setup.exe
+echo   installer_output\FCC_Lookup_Ver_1.68_Setup.exe
 echo.
 echo   This version installs a fast-launch app folder.
 echo   Users still launch it from one normal shortcut.

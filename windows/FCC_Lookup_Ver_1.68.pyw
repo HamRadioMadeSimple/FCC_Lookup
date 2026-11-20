@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-FCC Lookup Ver 1.67 - Ham Radio Callsign Lookup Tool
+FCC Lookup Ver 1.68 - Ham Radio Callsign Lookup Tool
 Shares ham.db with JS8Map. Default folder on Windows: C:/FCC_DB
 Windows build with distance and bearing from a home callsign.
 """
@@ -10,7 +10,7 @@ from tkinter import ttk, messagebox, filedialog
 import sqlite3, csv, os, sys, threading, math, json, tempfile, urllib.request, zipfile
 
 APP_NAME = "FCC Lookup"
-APP_VERSION = "Ver 1.67"
+APP_VERSION = "Ver 1.68"
 APP_DISPLAY_NAME = f"{APP_NAME} {APP_VERSION}"
 AUTHOR_CALL = "KW3KW"
 AUTHOR_CREDIT = f"by {AUTHOR_CALL}"
@@ -755,6 +755,7 @@ class FccLookup(tk.Tk):
         self._settings = load_settings()
         self._status_busy = False
         self._status_seq = 0
+        self._first_check_done = False   # offer the first download only once per start
         self._ham_img = None   # keep reference so GC doesn't destroy it
         self._fcc_img = None
         self._set_icon()
@@ -1289,6 +1290,36 @@ class FccLookup(tk.Tk):
             if us: parts.append(f"US: {us:,} records")
             if ca: parts.append(f"CA: {ca:,} records")
             self._status_var.set("  " + "   |   ".join(parts) + f"   -- Ready   ({dbp})")
+        if not self._first_check_done:
+            self._first_check_done = True
+            if not err and us == 0 and ca == 0 and not self._busy:
+                self.after(300, self._offer_first_download)
+
+    def _offer_first_download(self):
+        """No callsign data yet (new install): offer to download U.S. and Canadian data now."""
+        if self._busy: return
+        if not messagebox.askyesno("Download callsign data",
+                "FCC Lookup has no callsign data yet.\n\n"
+                "Download the U.S. (FCC) and Canadian amateur databases now?\n"
+                "This needs an internet connection and takes several minutes.\n\n"
+                "You can also do it later with Update FCC DB and Update Canadian DB."):
+            return
+        results = []
+        def after_canada(ok, msg):
+            if ok:
+                self._finish_load(True, "\n\n".join(results + [msg]) +
+                    "\n\nTip: for accurate U.S. distances, also choose\n"
+                    "Database > Download / Update ZIP Centers.")
+            else:
+                self._finish_load(False, "U.S. data is loaded, but the Canadian download did not finish:\n\n"
+                    f"{msg}\n\nTry Update Canadian DB again later.")
+        def after_fcc(ok, msg):
+            if ok:
+                results.append(msg)
+                self._run_in_thread(download_and_update_canadian, done_override=after_canada)
+            else:
+                self._finish_load(False, msg)
+        self._run_in_thread(download_and_update_fcc, done_override=after_fcc)
 
     def _refresh_status(self):
         # Backward-compatible wrapper for any old callbacks.

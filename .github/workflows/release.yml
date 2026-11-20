@@ -1,4 +1,4 @@
-# Making a tag like v1.67 (on the Releases page) builds the Windows Setup.exe and portable zip and the
+# Making a tag like v1.68 (on the Releases page) builds the Windows Setup.exe and portable zip and the
 # Linux .tar.gz, tests the Linux download on clean Ubuntu, Debian and Fedora, then attaches the files to
 # that release. (Actions > Release > Run workflow also builds and tests them, without a release.)
 name: Release
@@ -24,11 +24,11 @@ jobs:
       - name: Build the Setup.exe
         shell: cmd
         working-directory: windows
-        run: Build_FCC_Lookup_Ver_1.67.bat
+        run: Build_FCC_Lookup_Ver_1.68.bat
       - name: Make the portable zip
         shell: pwsh
         run: |
-          $v = (Select-String -Path windows/FCC_Lookup_Ver_1.67.pyw -Pattern '^APP_VERSION = "Ver ([0-9.]+)"').Matches[0].Groups[1].Value
+          $v = (Select-String -Path windows/FCC_Lookup_Ver_1.68.pyw -Pattern '^APP_VERSION = "Ver ([0-9.]+)"').Matches[0].Groups[1].Value
           $name = "FCC-Lookup-$v-Windows-Portable"
           New-Item -ItemType Directory -Force -Path "stage/$name", output | Out-Null
           Copy-Item -Recurse "windows/dist/FCC_Lookup_Ver_$v/*" "stage/$name/"
@@ -123,7 +123,7 @@ jobs:
       - name: Check the tag matches the version in the program
         run: |
           V="${GITHUB_REF_NAME#v}"
-          grep -q "^APP_VERSION = \"Ver $V\"" windows/FCC_Lookup_Ver_1.67.pyw || { echo "Tag $GITHUB_REF_NAME but the program says otherwise"; exit 1; }
+          grep -q "^APP_VERSION = \"Ver $V\"" windows/FCC_Lookup_Ver_1.68.pyw || { echo "Tag $GITHUB_REF_NAME but the program says otherwise"; exit 1; }
       - name: Release notes from CHANGELOG.md (the section for this version)
         run: |
           V="${GITHUB_REF_NAME#v}"

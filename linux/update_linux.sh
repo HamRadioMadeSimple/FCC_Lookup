@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# FCC Lookup 1.67 - install or update into ~/Applications/FCC-Lookup
+# FCC Lookup 1.68 - install or update into ~/Applications/FCC-Lookup
 # Run it with:  bash update_linux.sh   (the install block in the guide does this for you)
 # Safe to run again: an update replaces the program and keeps your database and settings.
 
 set -u
 
-VERSION="1.67"
-SRC_PY="FCC_Lookup_Ver_1.67_linux.py"
+VERSION="1.68"
+SRC_PY="FCC_Lookup_Ver_1.68_linux.py"
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 APP_DIR="$HOME/Applications/FCC-Lookup"

@@ -4,7 +4,7 @@
 # needs nothing extra. Built on Ubuntu 22.04 by GitHub so it runs on Mint 21 / Ubuntu 22.04 and newer.
 
 a = Analysis(
-    ['FCC_Lookup_Ver_1.67_linux.py'],
+    ['FCC_Lookup_Ver_1.68_linux.py'],
     pathex=[],
     binaries=[],
     datas=[
