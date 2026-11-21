@@ -2,7 +2,7 @@
 
 An offline callsign lookup for U.S. FCC and Canadian amateur radio licenses. No internet connection needed once the database is built.
 
-**Windows and Linux** · [Download](https://github.com/HamRadioMadeSimple/FCC_Lookup/releases/latest) · [Guides](docs) · [Website](https://hamradiomadesimple.github.io/)
+**Windows and Linux** · [Download](https://github.com/HamRadioMadeSimple/FCC_Lookup/releases/latest) · [Guides](docs) · [Video](https://youtu.be/RjpGs27fzLI) · [Website](https://hamradiomadesimple.github.io/)
 
 ## What it does
 
